@@ -13,17 +13,101 @@ class MyApp extends StatelessWidget {
       title: 'Yudistira Profile',
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(),
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
-  final String title;
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
 
-  const MyHomePage({super.key, required this.title});
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Login Form"),
+        backgroundColor: Colors.blue,
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Card(
+            elevation: 5, // Adjust elevation for shadow effect
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0), // Rounded corners
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min, // Use min size for card height
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const Text(
+                    "Login",
+                    style: TextStyle(
+                      fontSize: 35,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    controller: _emailController,
+                    decoration: const InputDecoration(
+                      hintText: "Email",
+                      border: OutlineInputBorder(), // Add border for better visuals
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    controller: _passwordController,
+                    decoration: const InputDecoration(
+                      hintText: "Password",
+                      border: OutlineInputBorder(), // Add border for better visuals
+                    ),
+                    obscureText: true,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // Add login logic here, e.g., validate inputs
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Dashboard(),
+                          ),
+                        );
+                      },
+                      child: const Text("Login"),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class Dashboard extends StatelessWidget {
+  const Dashboard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -42,13 +126,11 @@ class MyHomePage extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 const SizedBox(height: 32),
-                // Avatar dan gambar profil
                 const CircleAvatar(
                   radius: 80,
                   backgroundImage: AssetImage('PP.jpg'),
                 ),
                 const SizedBox(height: 16),
-                // Nama dan kelas
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Column(
@@ -56,8 +138,8 @@ class MyHomePage extends StatelessWidget {
                       Text(
                         'Yudistira Dharma Wardana',
                         style: TextStyle(
-                          fontSize: 22, 
-                          fontWeight: FontWeight.bold, 
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
                           color: Colors.black87,
                         ),
                         textAlign: TextAlign.center,
@@ -71,15 +153,16 @@ class MyHomePage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 24),
-                // Tombol untuk navigasi ke halaman profil
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30.0),
                     ),
                     padding: const EdgeInsets.symmetric(
-                      vertical: 15.0, horizontal: 40.0),
-                    backgroundColor: Colors.blueAccent, // Properti yang benar
+                      vertical: 15.0,
+                      horizontal: 40.0,
+                    ),
+                    backgroundColor: Colors.blueAccent,
                   ),
                   onPressed: () {
                     Navigator.push(
@@ -114,21 +197,18 @@ class ProfilePage extends StatelessWidget {
       ),
       body: Stack(
         children: [
-          // Background Image
           Positioned.fill(
             child: Image.asset(
-              'background.jpg',  // Pastikan path image sesuai dengan folder yang digunakan
+              'background.jpg',
               fit: BoxFit.cover,
             ),
           ),
-          // Konten di atas background
           SingleChildScrollView(
             child: Container(
-              color: Colors.white.withOpacity(0.8),  // Transparansi background putih agar konten lebih jelas
+              color: Colors.white.withOpacity(0.8),
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
-                  // Avatar dan Nama
                   const CircleAvatar(
                     radius: 60,
                     backgroundImage: AssetImage('PP.jpg'),
@@ -143,25 +223,19 @@ class ProfilePage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 32),
-
-                  // Card: Informasi Pribadi
                   buildInfoCard(
                     title: 'About',
-                    content: 'Saya adalah seorang siswa SMK Wikrama Bogor yang sedang menjalani studi di bidang PPLG. Saya memiliki tekad untuk menjadi seorang backend developer.',
+                    content: 'Saya adalah seorang siswa SMK Wikrama Bogor yang sedang menjalani studi di bidang PPLG.',
                   ),
                   const SizedBox(height: 16),
-
-                  // Card: History
                   buildInfoCard(
                     title: 'History',
-                    content: 'Saya sudah hampir 2,5 tahun berada di SMK Wikrama, dan saya telah menjalani 6 bulan PKL di CV Kreasi Sawala Nusantara sebagai backend developer. Saya berkontribusi dalam pembangunan web invitation.',
+                    content: 'Saya sudah hampir 2,5 tahun berada di SMK Wikrama.',
                   ),
                   const SizedBox(height: 16),
-
-                  // Card: Skill
                   buildInfoCard(
                     title: 'Skill',
-                    content: 'Selama belajar di Wikrama, saya telah mempelajari banyak bahasa pemrograman seperti HTML, CSS, PHP, Laravel, Python, dan Docker. Selama PKL, saya menggunakan Laravel dan MySQL.',
+                    content: 'Saya telah mempelajari HTML, CSS, PHP, Laravel, Python, dan Docker.',
                   ),
                 ],
               ),
@@ -172,8 +246,7 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  // Widget untuk membuat kartu informasi
-  Widget buildInfoCard({required String title, required String content}) {
+  static Widget buildInfoCard({required String title, required String content}) {
     return Container(
       width: double.infinity,
       child: Card(
