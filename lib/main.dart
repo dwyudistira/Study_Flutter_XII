@@ -13,6 +13,7 @@ class MyApp extends StatelessWidget {
       title: 'Yudistira Profile',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: const MyHomePage(),
     );
@@ -27,13 +28,13 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _classController = TextEditingController();
 
   @override
   void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
+    _nameController.dispose();
+    _classController.dispose();
     super.dispose();
   }
 
@@ -41,59 +42,76 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Login Form"),
-        backgroundColor: Colors.blue,
+        title: const Text("Input Form"),
+        backgroundColor: Colors.blueAccent,
       ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Card(
-            elevation: 5, // Adjust elevation for shadow effect
+            elevation: 8,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15.0), // Rounded corners
+              borderRadius: BorderRadius.circular(20.0),
             ),
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(24.0),
               child: Column(
-                mainAxisSize: MainAxisSize.min, // Use min size for card height
+                mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   const Text(
-                    "Login",
+                    "Enter Details",
                     style: TextStyle(
-                      fontSize: 35,
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blueAccent,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    controller: _nameController,
+                    decoration: const InputDecoration(
+                      hintText: "Nama",
+                      border: OutlineInputBorder(),
+                      filled: true,
+                      fillColor: Colors.white,
                     ),
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
-                    controller: _emailController,
+                    controller: _classController,
                     decoration: const InputDecoration(
-                      hintText: "Email",
-                      border: OutlineInputBorder(), // Add border for better visuals
+                      hintText: "Kelas",
+                      border: OutlineInputBorder(),
+                      filled: true,
+                      fillColor: Colors.white,
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  TextFormField(
-                    controller: _passwordController,
-                    decoration: const InputDecoration(
-                      hintText: "Password",
-                      border: OutlineInputBorder(), // Add border for better visuals
-                    ),
-                    obscureText: true,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 20.0),
                     child: ElevatedButton(
                       onPressed: () {
-                        // Add login logic here, e.g., validate inputs
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const Dashboard(),
+                            builder: (context) => Dashboard(
+                              name: _nameController.text,
+                              className: _classController.text,
+                            ),
                           ),
                         );
                       },
-                      child: const Text("Login"),
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
+                        backgroundColor: Colors.blueAccent, // Change from primary to backgroundColor
+                      ),
+                      child: const Text(
+                        "Submit",
+                        style: TextStyle(fontSize: 18),
+                      ),
                     ),
                   ),
                 ],
@@ -107,7 +125,10 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class Dashboard extends StatelessWidget {
-  const Dashboard({super.key});
+  final String name;
+  final String className;
+
+  const Dashboard({super.key, required this.name, required this.className});
 
   @override
   Widget build(BuildContext context) {
@@ -134,19 +155,20 @@ class Dashboard extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Column(
-                    children: const [
+                    children: [
                       Text(
-                        'Yudistira Dharma Wardana',
-                        style: TextStyle(
+                        name,
+                        style: const TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
                           color: Colors.black87,
                         ),
                         textAlign: TextAlign.center,
                       ),
+                      const SizedBox(height: 8),
                       Text(
-                        'PPLG XII-1',
-                        style: TextStyle(fontSize: 18, color: Colors.black54),
+                        className,
+                        style: const TextStyle(fontSize: 18, color: Colors.black54),
                         textAlign: TextAlign.center,
                       ),
                     ],
@@ -162,12 +184,14 @@ class Dashboard extends StatelessWidget {
                       vertical: 15.0,
                       horizontal: 40.0,
                     ),
-                    backgroundColor: Colors.blueAccent,
+                    backgroundColor: Colors.blueAccent, // Change from primary to backgroundColor
                   ),
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const ProfilePage()),
+                      MaterialPageRoute(
+                        builder: (context) => const ProfileFormPage(),
+                      ),
                     );
                   },
                   child: const Text(
@@ -185,8 +209,107 @@ class Dashboard extends StatelessWidget {
   }
 }
 
+class ProfileFormPage extends StatefulWidget {
+  const ProfileFormPage({super.key});
+
+  @override
+  State<ProfileFormPage> createState() => _ProfileFormPageState();
+}
+
+class _ProfileFormPageState extends State<ProfileFormPage> {
+  final _aboutController = TextEditingController();
+  final _historyController = TextEditingController();
+  final _skillsController = TextEditingController();
+
+  @override
+  void dispose() {
+    _aboutController.dispose();
+    _historyController.dispose();
+    _skillsController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Profile Form'),
+        backgroundColor: Colors.blueAccent,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            TextFormField(
+              controller: _aboutController,
+              decoration: const InputDecoration(
+                labelText: 'About',
+                border: OutlineInputBorder(),
+                filled: true,
+                fillColor: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 10),
+            TextFormField(
+              controller: _historyController,
+              decoration: const InputDecoration(
+                labelText: 'History',
+                border: OutlineInputBorder(),
+                filled: true,
+                fillColor: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 10),
+            TextFormField(
+              controller: _skillsController,
+              decoration: const InputDecoration(
+                labelText: 'Skills',
+                border: OutlineInputBorder(),
+                filled: true,
+                fillColor: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProfilePage(
+                      about: _aboutController.text,
+                      history: _historyController.text,
+                      skills: _skillsController.text,
+                    ),
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                ),
+                backgroundColor: Colors.blueAccent, // Change from primary to backgroundColor
+              ),
+              child: const Text('Save & View Profile', style: TextStyle(fontSize: 18)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+  final String about;
+  final String history;
+  final String skills;
+
+  const ProfilePage({
+    super.key,
+    required this.about,
+    required this.history,
+    required this.skills,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -195,53 +318,22 @@ class ProfilePage extends StatelessWidget {
         title: const Text('Profile Page'),
         backgroundColor: Colors.blueAccent,
       ),
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: Image.asset(
-              'background.jpg',
-              fit: BoxFit.cover,
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            const CircleAvatar(
+              radius: 60,
+              backgroundImage: AssetImage('PP.jpg'),
             ),
-          ),
-          SingleChildScrollView(
-            child: Container(
-              color: Colors.white.withOpacity(0.8),
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  const CircleAvatar(
-                    radius: 60,
-                    backgroundImage: AssetImage('PP.jpg'),
-                  ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'Yudistira Dharma Wardana',
-                    style: TextStyle(
-                      fontSize: 26,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  const SizedBox(height: 32),
-                  buildInfoCard(
-                    title: 'About',
-                    content: 'Saya adalah seorang siswa SMK Wikrama Bogor yang sedang menjalani studi di bidang PPLG.',
-                  ),
-                  const SizedBox(height: 16),
-                  buildInfoCard(
-                    title: 'History',
-                    content: 'Saya sudah hampir 2,5 tahun berada di SMK Wikrama.',
-                  ),
-                  const SizedBox(height: 16),
-                  buildInfoCard(
-                    title: 'Skill',
-                    content: 'Saya telah mempelajari HTML, CSS, PHP, Laravel, Python, dan Docker.',
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
+            const SizedBox(height: 16),
+            buildInfoCard(title: 'About', content: about),
+            const SizedBox(height: 16),
+            buildInfoCard(title: 'History', content: history),
+            const SizedBox(height: 16),
+            buildInfoCard(title: 'Skills', content: skills),
+          ],
+        ),
       ),
     );
   }
@@ -271,7 +363,10 @@ class ProfilePage extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 content,
-                style: const TextStyle(color: Colors.white, fontSize: 16),
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                ),
               ),
             ],
           ),
